@@ -29,6 +29,8 @@ services:
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=StudentsManagerDb;User Id=sa;Password=strongPassword12!@;Encrypt=false;
       - StorageSettings__AzureConnectionString=UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://azurite
       - StorageSettings__PathBasis=http://azurite:10000/
+      - ServiceBusSettings__AzureConnectionString=Endpoint=sb://bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=123-Q
+      - ServiceBusSettings__QueueName=ExaminationQueue
     ports:
       - "80"
       - "443"
