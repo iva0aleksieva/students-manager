@@ -59,5 +59,17 @@ namespace StudentsManager.Mvc.Services.Forum
             await _dbContext.SaveChangesAsync();
             return entity;
         }
+
+        public Task<List<string>> GetSlidoQuestionsAsync(int limit = 20, int skip = 0)
+        {
+            return _dbContext
+                .ForumQuestions
+                .AsNoTracking()
+                .OrderByDescending(question => question.Id)
+                .Select(question => question.Description)
+                .Take(limit)
+                .Skip(skip)
+                .ToListAsync();
+        }
     }
 }
