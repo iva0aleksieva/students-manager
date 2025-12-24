@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudentsManager.Mvc.Configurations;
 using StudentsManager.Mvc.Domain.Entities;
@@ -45,9 +45,68 @@ namespace StudentsManager.Mvc.Services.Students
             return user.ToView();
         }
 
+        public async Task<StudentProfileView?> GetStudentProfileViewAsync(Guid studentId)
+        {
+            var student = await dbContext
+                .Users
+                .Select(user => new
+                {
+                    user.Id,
+                    user.FullName,
+                    user.Base64EncodePicture,
+                    user.FacultyNumber,
+                })
+                .FirstOrDefaultAsync(user => user.Id == studentId);
+
+            if (student == null)
+            {
+                return null;
+            }
+
+            var userAnswers = await dbContext
+                .UserAnswers
+                .Where(answer => answer.UserId == studentId)
+                .Include(answer => answer.QuestionOption)
+                .ThenInclude(option => option!.TestQuestion)
+                .ToListAsync();
+
+            var list = new List<ProfileTestQuestionOption>();
+            foreach (var userAnswer in userAnswers)
+            {
+                if (userAnswer.QuestionOption?.TestQuestion == null)
+                {
+                    continue;
+                }
+
+                list.Add(new ProfileTestQuestionOption(
+                    userAnswer.QuestionOption.TestQuestion.Description,
+                    userAnswer.QuestionOption.Description,
+                    userAnswer.QuestionOption.IsCorrect));
+            }
+
+            return new StudentProfileView(
+                student.Id,
+                student.FullName,
+                student.Base64EncodePicture,
+                student.FacultyNumber,
+                list);
+        }
+
         private Task<User?> GetUserByFacultyNumberAsync(string facultyNumber) =>
             dbContext
                 .Users
                 .FirstOrDefaultAsync(user => user.FacultyNumber == facultyNumber);
     }
+
+    public record struct StudentProfileView(
+        Guid Id,
+        string FullName,
+        string? Base64EncodePicture,
+        string FacultyNumber,
+        List<ProfileTestQuestionOption> TestQuestions);
+
+    public record struct ProfileTestQuestionOption(
+        string TestQuestionDescription,
+        string QuestionOptionDescription,
+        bool WasCorrect);
 }
