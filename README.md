@@ -93,7 +93,13 @@ curl ^"http://localhost:5173/api/chatbot/save_results^" ^
 
 ### Slido
 
-**POST**
+**GET**
+
+```bash
+curl --location 'https://students-manager-dev.azurewebsites.net/api/slido?limit=20&skip=0'
+```
+
+**POST question**
 
 ```bash
 curl --location 'https://students-manager-dev.azurewebsites.net/api/slido/question' \
@@ -103,7 +109,18 @@ curl --location 'https://students-manager-dev.azurewebsites.net/api/slido/questi
 }'
 ```
 
-**GET**
+**POST comment**
+
+```bash
+curl --location 'https://students-manager-dev.azurewebsites.net/api/slido/comment' \
+--header 'Content-Type: application/json' \
+--data '{
+		"forumQuestionId": 4,
+		"description":"api post comment"
+}'
+```
+
+**GET questions**
 
 ```bash
 curl --location 'https://students-manager-dev.azurewebsites.net/api/slido/questions?limit=20&skip=0'
@@ -150,7 +167,7 @@ curl --request POST \
 **Request**
 
 ```bash
-curl --location 'https://localhost:5001/api/events' \
+curl --location 'https://students-manager-dev.azurewebsites.net/api/events' \
 --header 'Content-Type: application/json' \
 --data '{
     "userId":"123123",
