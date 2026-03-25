@@ -12,7 +12,12 @@ namespace StudentsManager.Mvc.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] int limit, [FromQuery] int skip)
         {
-            var result = await service.GetAsync(limit, skip);
+            var forumQuestions = await service.GetAsync(limit, skip);
+            var result = forumQuestions.Select(question => new QuestionCommentsView(
+                question.Id,
+                question.Description,
+                question.Comments?.Select(comment => comment.Description).ToArray()
+            )).ToList();
             return Ok(result);
         }
 
@@ -52,4 +57,5 @@ namespace StudentsManager.Mvc.Controllers
     }
 
     public record struct QuestionInput(string Question);
+    public record struct QuestionCommentsView(int ForumQuestionId, string ForumQuestionDescription, string[]? Comments);
 }
