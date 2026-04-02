@@ -161,6 +161,11 @@ function Header() {
                             aria-label="Main navigation"
                         >
                             <ul className="menu menu-left">
+                                <li className="menu-item" ref={assignMenuItemRef(1)}>
+                                    <Link to="/slido" className="menu-link" onClick={closeMobileMenu}>
+                                        Slido
+                                    </Link>
+                                </li>
                                 {isLoggedIn && (
                                     <li className="menu-item" ref={assignMenuItemRef(0)}>
                                         <Link to="/profile" className="menu-link" onClick={closeMobileMenu}>
@@ -177,11 +182,6 @@ function Header() {
                             </h1>
 
                             <ul className="menu menu-right">
-                                <li className="menu-item" ref={assignMenuItemRef(1)}>
-                                    <Link to="/slido" className="menu-link" onClick={closeMobileMenu}>
-                                        Slido
-                                    </Link>
-                                </li>
                                 <li className="menu-item" ref={assignMenuItemRef(2)}>
                                     <Link to="/quiz" className="menu-link" onClick={closeMobileMenu}>
                                         Quiz
