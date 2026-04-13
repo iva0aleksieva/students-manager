@@ -100,6 +100,13 @@ a {
     display: none
 }
 
+.card {
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 4px
+}
+
 .ov-hidden {
     overflow: hidden
 }
@@ -324,6 +331,19 @@ button:focus {
 
         .col-d-100.abs-square.half {
             padding-bottom: 50%
+        }
+
+.col-d-75 {
+    width: 75%
+}
+
+    .col-d-50.abs-square {
+        position: relative;
+        padding-bottom: 50%
+    }
+
+        .col-d-50.abs-square.half {
+            padding-bottom: 37%
         }
 
 .col-d-50 {
