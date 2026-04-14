@@ -53,9 +53,18 @@ export default function SlidoPage() {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to post question");
-        const tempId = Math.floor(Math.random() * 10000); // Временно ID до презареждане
-        // Добавяме въпроса оптимистично в началото на списъка без да чакаме нов GET
-        setForumQuestions([{ id: tempId, description: newQuestion, comments: [] }, ...forumQuestions]);
+        // След успешен POST, правим нов GET за да заредим актуалния списък с реални ID-та
+        return fetch(`${baseUrl}/slido?limit=20&skip=0`);
+      })
+      .then((res) => res.json()) // Преобразуваме отговора в JSON
+      .then((data) => {
+        // Същото мапване като в useEffect
+        const mapped = data.map((q) => ({
+          id: q.forumQuestionId,
+          description: q.forumQuestionDescription,
+          comments: (q.comments ?? []).map((text, i) => ({ id: i, description: text })),
+        }));
+        setForumQuestions(mapped); // Обновяваме списъка с реални данни
         setNewQuestion(""); // Изчистваме полето
       })
       .catch((err) => console.error(err));
