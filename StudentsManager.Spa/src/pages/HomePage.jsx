@@ -8,7 +8,7 @@ function HomePage() {
 					<div className="intro-test-txt center">
 						<div className="intro-test-txt-box white-box center anim-elem top-visibility done">
 							<div className="addition-txt-box">
-								<span className="p-huge lightGrey addition-txt">Welcome group 37</span>
+								<span className="p-huge lightGrey addition-txt">Welcome group 37 - MUT</span>
 							</div>
 						</div>
 						<div className="image-item anim-elem left-100 done">
