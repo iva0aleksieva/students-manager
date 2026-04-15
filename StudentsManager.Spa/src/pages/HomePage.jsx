@@ -101,7 +101,7 @@ function HomePage() {
 
             <section className="hp-section engine-zone">
                 <div className="zone-header">
-                    <h2 className="zone-title">Learning Core v2.0</h2>
+                    <h2 className="zone-title">Learning Core</h2>
                     <p className="zone-sub">Real-time neural progress tracking</p>
                 </div>
 
