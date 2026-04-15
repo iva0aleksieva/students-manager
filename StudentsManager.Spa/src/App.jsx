@@ -10,6 +10,7 @@ import ChatbotPage from './pages/ChatbotPage';
 import ChatbotResultsPage from './pages/ChatbotResultsPage';
 import QuizPage from './pages/QuizPage';
 import UserlessPage from './pages/UserlessPage';
+import TimelinePage from './pages/TimelinePage';
 
 function App() {
   const { isLoggedIn } = useAuth();
@@ -26,17 +27,20 @@ function App() {
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/chatbot' element={<ChatbotPage />} />
             <Route path='/chatbot/results' element={<ChatbotResultsPage />} />
+            <Route path='/timeline' element={<TimelinePage />} />
             <Route path='/login' element={<Navigate to='/' replace />} />
           </>
         ) : (
           <>
             <Route path='/login' element={<LoginPage />} />
+            <Route path='/timeline' element={<Navigate to='/login' replace />} />
             <Route path='/profile' element={<Navigate to='/login' replace />} />
             <Route path='/chatbot' element={<Navigate to='/login' replace />} />
             <Route path='/chatbot/results' element={<Navigate to='/login' replace />} />
           </>
         )}
       </Routes>
+      
     </Layout>
   );
 }
