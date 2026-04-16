@@ -10,9 +10,11 @@ export default function SlidoPage() {
   const userId = "1eac9820-5e6e-4d10-6e94-08de36f40f78";
 
   const [forumQuestions, setForumQuestions] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(true);
 
   const [newQuestion, setNewQuestion] = useState("");
   const [newComments, setNewComments] = useState({}); // Mapping questionId -> commentDescription
+  const [commentErrors, setCommentErrors] = useState({}); // Mapping questionId -> error message
 
   // Placeholder for backend data fetching
   // GET заявка към API — зарежда всички въпроси при отваряне на страницата
@@ -33,8 +35,12 @@ export default function SlidoPage() {
           comments: (q.comments ?? []).map((text, i) => ({ id: i, description: text })),
         }));
         setForumQuestions(mapped); // Записваме въпросите в state-а
+        setLoadingComments(false); // Скончваме loading state
       })
-      .catch((err) => console.error("Failed to fetch forum questions", err));
+      .catch((err) => {
+        console.error("Failed to fetch forum questions", err);
+        setLoadingComments(false);
+      });
   }, []); // Празен масив — изпълнява се само веднъж при зареждане
 
   const handleQuestionSubmit = (e) => {
@@ -72,7 +78,12 @@ export default function SlidoPage() {
 
   const handleCommentSubmit = (questionId) => {
     const commentText = newComments[questionId];
-    if (!commentText || !commentText.trim()) return;
+    if (!commentText || !commentText.trim()) {
+      setCommentErrors({ ...commentErrors, [questionId]: "Please enter a comment" });
+      return;
+    }
+    // Clear error if comment is valid
+    setCommentErrors({ ...commentErrors, [questionId]: "" });
 
     fetch(`${baseUrl}/slido/comment`, {
       method: "POST",
@@ -93,10 +104,67 @@ export default function SlidoPage() {
 
   const handleCommentChange = (questionId, text) => {
     setNewComments({ ...newComments, [questionId]: text });
+    // Clear error when user starts typing
+    if (commentErrors[questionId]) {
+      setCommentErrors({ ...commentErrors, [questionId]: "" });
+    }
   };
 
   return (
     <div className="slido-page" style={styles.page}>
+      <style>{`
+        .btn-primary:hover {
+          background-color: #2d8570 !important;
+        }
+
+        .panel {
+          cursor: default;
+        }
+
+        .media-block, .commentsSection, .questionText, .mediaHeading {
+          cursor: default;
+          pointer-events: none;
+        }
+        
+        .inputGroup, .inputGroup * {
+          pointer-events: auto;
+        }
+        
+        .btn-primary, .comment-post-button {
+          cursor: pointer !important;
+        }
+        
+        .comment-input-error {
+          border-color: #e74c3c !important;
+          box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+        }
+        
+        .error-message {
+          color: #e74c3c;
+          font-size: 12px;
+          margin-top: 5px;
+          font-weight: 500;
+        }
+        
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        .loading-spinner {
+          display: inline-block;
+          animation: spin 1s linear infinite;
+          margin-right: 5px;
+        }
+        
+        .loading-text {
+          color: #41b8a2;
+          font-size: 14px;
+          font-weight: 500;
+          text-align: center;
+          padding: 20px 0;
+        }
+      `}</style>
       <div className="container" style={styles.container}>
         <header style={styles.headerSection}>
           <h1 style={styles.title}>Forum & Discussion</h1>
@@ -134,7 +202,7 @@ export default function SlidoPage() {
           ) : (
             <div className="panel" style={styles.panel}>
               <div className="panel-body" style={styles.panelBody}>
-                <p>Ако желаеш да зададеш въпрос, моля логни се в платформата.</p>
+                <p>To ask a question, please log into the platform.</p>
               </div>
             </div>
           )}
@@ -163,19 +231,27 @@ export default function SlidoPage() {
                 <div style={styles.commentsSection}>
                   <h4 style={styles.commentsTitle}>Comments</h4>
                   <div style={styles.commentsList}>
-                    {question.comments &&
+                    {loadingComments ? (
+                      <div className="loading-text">
+                        <span className="loading-spinner">⏳</span>
+                        Loading comments...
+                      </div>
+                    ) : question.comments && question.comments.length > 0 ? (
                       question.comments.map((comment) => (
                         <div key={comment.id} style={styles.commentItem}>
                           <p style={styles.commentText}>{comment.description}</p>
                         </div>
-                      ))}
+                      ))
+                    ) : (
+                      <p style={styles.noCommentsText}>No comments yet</p>
+                    )}
                   </div>
 
                   {/* Add Comment Form */}
                   <div style={{ marginTop: "15px" }}>
                     <div style={styles.inputGroup}>
                       <textarea
-                        className="form-control"
+                        className={`form-control ${commentErrors[question.id] ? "comment-input-error" : ""}`}
                         placeholder="Write a comment..."
                         value={newComments[question.id] || ""}
                         onChange={(e) => handleCommentChange(question.id, e.target.value)}
@@ -184,12 +260,16 @@ export default function SlidoPage() {
                       />
                       <button
                         type="button"
+                        className="btn btn-sm btn-primary pull-right"
                         onClick={() => handleCommentSubmit(question.id)}
                         style={styles.btnComment}
                       >
                         Post
                       </button>
                     </div>
+                    {commentErrors[question.id] && (
+                      <div className="error-message">{commentErrors[question.id]}</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -264,6 +344,13 @@ const styles = {
     boxSizing: "border-box",
     resize: "none",
     fontFamily: "inherit",
+    backgroundColor: "#fafafa",
+    transition: "all 0.2s ease",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+  },
+  formControlFocus: {
+    borderColor: "#41b8a2",
+    boxShadow: "0 0 0 3px rgba(65, 184, 162, 0.1)",
   },
   btnPrimary: {
     backgroundColor: "#41b8a2",
@@ -328,32 +415,46 @@ const styles = {
     color: "#576574",
     margin: 0,
   },
+  noCommentsText: {
+    fontSize: "14px",
+    color: "#999",
+    textAlign: "center",
+    fontStyle: "italic",
+    margin: 0,
+    padding: "20px 0",
+  },
   inputGroup: {
     display: "flex",
     gap: "10px",
-    alignItems: "center", // Strictly prevents vertical stretching
+    alignItems: "flex-end",
   },
   commentInput: {
     flex: 1,
-    height: "40px",
-    padding: "0 15px",
+    minHeight: "70px",
+    padding: "12px 15px",
     borderRadius: "8px",
     border: "1px solid #ddd",
     fontSize: "14px",
     outline: "none",
     boxSizing: "border-box",
+    fontFamily: "inherit",
+    backgroundColor: "#fafafa",
+    resize: "vertical",
+    transition: "all 0.2s ease",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
   },
   btnComment: {
     backgroundColor: "#41b8a2",
     color: "#fff",
-    height: "40px", // Match input height perfectly
-    padding: "0 20px",
+    padding: "12px 24px",
     borderRadius: "8px",
     border: "none",
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "600",
-    whiteSpace: "nowrap", // Prevents the button from being squished
+    whiteSpace: "nowrap",
     boxSizing: "border-box",
+    transition: "all 0.2s ease",
+    boxShadow: "0 2px 8px rgba(65, 184, 162, 0.2)",
   },
 };
