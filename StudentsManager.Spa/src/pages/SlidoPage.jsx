@@ -3,11 +3,11 @@ import { useAuth } from "../context/AuthContext";
 import { baseUrl } from "../services/apiConfig";
 
 export default function SlidoPage() {
-  // const { isLoggedIn, userId } = useAuth();
+  const { isLoggedIn, userId } = useAuth();
 
   // MOCKED FOR TESTING
-  const isLoggedIn = true;
-  const userId = "1eac9820-5e6e-4d10-6e94-08de36f40f78";
+  //const isLoggedIn = true;
+  //const userId = "1eac9820-5e6e-4d10-6e94-08de36f40f78";
 
   const [forumQuestions, setForumQuestions] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
@@ -16,20 +16,14 @@ export default function SlidoPage() {
   const [newComments, setNewComments] = useState({}); // Mapping questionId -> commentDescription
   const [commentErrors, setCommentErrors] = useState({}); // Mapping questionId -> error message
 
-  // Placeholder for backend data fetching
-  // GET заявка към API — зарежда всички въпроси при отваряне на страницата
   useEffect(() => {
-    // TODO: Fetch questions from backend:
-    // GET https://students-manager-dev.azurewebsites.net/api/slido?limit=20&skip=0
-    // Update forumQuestions state with result
-
     // Изпращаме GET заявка към /api/slido с параметри за максимален брой резултати
     fetch(`${baseUrl}/slido?limit=20&skip=0`)
       .then((res) => res.json()) // Преобразуваме отговора в JSON
       .then((data) => {
         // Преобразуваме данните от API формат към вътрешния формат на компонента
         const mapped = data.map((q) => ({
-          id: q.forumQuestionId,                // ID на въпроса
+          id: q.forumQuestionId, // ID на въпроса
           description: q.forumQuestionDescription, // Текст на въпроса
           // Коментарите идват като масив от стрингове — превръщаме ги в обекти с id и description
           comments: (q.comments ?? []).map((text, i) => ({ id: i, description: text })),
@@ -46,10 +40,6 @@ export default function SlidoPage() {
   const handleQuestionSubmit = (e) => {
     e.preventDefault(); // Спираме стандартното презареждане на формата
     if (!newQuestion.trim()) return; // Не изпращаме ако полето е празно
-
-    // TODO: Post question to backend:
-    // POST https://students-manager-dev.azurewebsites.net/api/slido/question
-    // Body: { question: newQuestion }
 
     // POST заявка към /api/slido/question — създава нов въпрос в базата
     fetch(`${baseUrl}/slido/question`, {
@@ -92,11 +82,13 @@ export default function SlidoPage() {
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to post comment");
-        setForumQuestions(forumQuestions.map((q) =>
-          q.id === questionId
-            ? { ...q, comments: [...q.comments, { id: Math.random(), description: commentText }] }
-            : q
-        ));
+        setForumQuestions(
+          forumQuestions.map((q) =>
+            q.id === questionId
+              ? { ...q, comments: [...q.comments, { id: Math.random(), description: commentText }] }
+              : q,
+          ),
+        );
         setNewComments({ ...newComments, [questionId]: "" });
       })
       .catch((err) => console.error(err));

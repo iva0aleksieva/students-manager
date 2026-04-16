@@ -44,4 +44,5 @@ public class EventsController : ControllerBase
 
         return CreatedAtAction(nameof(GetByUser), new { userId = entity.UserId }, entity);
     }
+
 }

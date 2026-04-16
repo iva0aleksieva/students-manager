@@ -1,9 +1,13 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { SCORE_ANIM_DURATION } from './quizConstants';
+import { createEvent } from '../../services/eventsService';
+import { useAuth } from '../../context/AuthContext';
 
 function QuizResults({ score, totalQuestions, onRestart }) {
     const scoreDisplayRef = useRef(null);
+    const hasLoggedEventRef = useRef(false);
+    const { userId } = useAuth();
 
     useEffect(() => {
         if (!scoreDisplayRef.current) return;
@@ -20,6 +24,21 @@ function QuizResults({ score, totalQuestions, onRestart }) {
         });
         return () => tween.kill();
     }, [score]);
+
+    useEffect(() => {
+        if (!userId || hasLoggedEventRef.current) return;
+        hasLoggedEventRef.current = true;
+
+        createEvent({
+            userId,
+            type: 'quiz',
+            data: {
+                score,
+                totalQuestions,
+                correct: Math.round((score / 100) * totalQuestions),
+            },
+        });
+    }, [score, totalQuestions, userId]);
 
     const scoreModifier =
         score >= 70 ? 'quiz-results__score--high' :
