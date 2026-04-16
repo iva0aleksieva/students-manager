@@ -10,6 +10,7 @@ import ChatbotPage from './pages/ChatbotPage';
 import ChatbotResultsPage from './pages/ChatbotResultsPage';
 import QuizPage from './pages/QuizPage';
 import UserlessPage from './pages/UserlessPage';
+import ComradesPage from './pages/ComradesPage';
 import TimelinePage from './pages/TimelinePage';
 
 function App() {
@@ -22,8 +23,10 @@ function App() {
         <Route path='/slido' element={<SlidoPage />} />
         <Route path='/quiz' element={<QuizPage />} />
         <Route path='/userless' element={<UserlessPage />} />
+        {/* <Route path='/comrades' element={<ComradesPage />} /> */}
         {isLoggedIn ? (
           <>
+           <Route path='/comrades' element={<ComradesPage />} />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/chatbot' element={<ChatbotPage />} />
             <Route path='/chatbot/results' element={<ChatbotResultsPage />} />

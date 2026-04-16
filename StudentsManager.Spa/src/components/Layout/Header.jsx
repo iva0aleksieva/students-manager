@@ -166,12 +166,24 @@ function Header() {
                                         Slido
                                     </Link>
                                 </li>
+                                {/* <li className="menu-item" ref={assignMenuItemRef(5)}>
+                                    <Link to="/comrades" className="menu-link" onClick={closeMobileMenu}>
+                                        Comrades
+                                    </Link>
+                                </li> */}
                                 {isLoggedIn && (
-                                    <li className="menu-item" ref={assignMenuItemRef(0)}>
-                                        <Link to="/profile" className="menu-link" onClick={closeMobileMenu}>
-                                            Profile
-                                        </Link>
-                                    </li>
+                                    <>
+                                        <li className="menu-item" ref={assignMenuItemRef(5)}>
+                                            <Link to="/comrades" className="menu-link" onClick={closeMobileMenu}>
+                                                Comrades
+                                            </Link>
+                                        </li>
+                                        <li className="menu-item" ref={assignMenuItemRef(0)}>
+                                            <Link to="/profile" className="menu-link" onClick={closeMobileMenu}>
+                                                Profile
+                                            </Link>
+                                        </li>
+                                    </>
                                 )}
                             </ul>
 
