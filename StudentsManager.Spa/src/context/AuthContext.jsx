@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { logEvent } from '../services/eventsService';
 
 const AuthContext = createContext();
 
@@ -13,6 +14,10 @@ export const AuthProvider = ({ children }) => {
   const login = (newUserId) => {
     sessionStorage.setItem('userId', newUserId);
     setUserId(newUserId);
+
+   logEvent(newUserId, 'profile-login', {
+      message: 'User logged in',
+    });
   };
 
   const logout = () => {

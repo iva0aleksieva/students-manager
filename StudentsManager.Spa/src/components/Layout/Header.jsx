@@ -206,6 +206,14 @@ function Header() {
                                         </Link>
                                     </li>
                                 )}
+
+                                {isLoggedIn && (
+                                    <li className="menu-item" ref={assignMenuItemRef(3)}>
+                                        <Link to="/timeline" className="menu-link" onClick={closeMobileMenu}>
+                                            Timeline
+                                        </Link>
+                                    </li>
+                                )}
                             </ul>
                         </nav>
 

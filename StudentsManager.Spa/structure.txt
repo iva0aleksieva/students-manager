@@ -1,0 +1,79 @@
+Folder PATH listing for volume New Volume
+Volume serial number is B05D-423C
+D:\KURSOVAHIBRIDNI\STUDENTS-MANAGER\STUDENTSMANAGER.SPA\SRC
+¦   App.jsx
+¦   index.css
+¦   main.jsx
+¦   
++---assets
+¦   ¦   react.svg
+¦   ¦   
+¦   +---chatbot
+¦   ¦       robot.png
+¦   ¦       
+¦   +---home
+¦   ¦       robot.png
+¦   ¦       
+¦   +---icons
+¦           favicon.ico
+¦           logo.svg
+¦           
++---components
+¦   +---Chatbot
+¦   ¦       Chatbot.jsx
+¦   ¦       ChatbotForm.jsx
+¦   ¦       ChatbotOptions.jsx
+¦   ¦       ChatbotQuestion.jsx
+¦   ¦       ChatbotResultCard.jsx
+¦   ¦       ChatbotResults.jsx
+¦   ¦       ChatbotTextInput.jsx
+¦   ¦       
+¦   +---Layout
+¦   ¦       Footer.jsx
+¦   ¦       Header.jsx
+¦   ¦       Layout.jsx
+¦   ¦       
+¦   +---Quiz
+¦           Quiz.jsx
+¦           quizConstants.js
+¦           QuizProgress.jsx
+¦           QuizQuestion.jsx
+¦           QuizResults.jsx
+¦           QuizReview.jsx
+¦           useQuiz.js
+¦           
++---context
+¦       AuthContext.jsx
+¦       
++---data
+¦       questions.json
+¦       quizQuestions.js
+¦       
++---pages
+¦       ChatbotPage.jsx
+¦       ChatbotResultsPage.jsx
+¦       HomePage.jsx
+¦       LoginPage.jsx
+¦       ProfilePage.jsx
+¦       QuizPage.jsx
+¦       SlidoPage.jsx
+¦       TimelinePage.jsx
+¦       UserlessPage.jsx
+¦       
++---services
+        apiConfig.js
+        chatbotService.js
+        userService.js
+        
+Folder PATH listing for volume New Volume
+Volume serial number is B05D-423C
+D:\KURSOVAHIBRIDNI\STUDENTS-MANAGER\STUDENTSMANAGER.SPA\PAGES
+Invalid path - \KURSOVAHIBRIDNI\STUDENTS-MANAGER\STUDENTSMANAGER.SPA\PAGES
+No subfolders exist 
+
+Folder PATH listing for volume New Volume
+Volume serial number is B05D-423C
+D:\KURSOVAHIBRIDNI\STUDENTS-MANAGER\STUDENTSMANAGER.SPA\COMPONENTS
+Invalid path - \KURSOVAHIBRIDNI\STUDENTS-MANAGER\STUDENTSMANAGER.SPA\COMPONENTS
+No subfolders exist 
+

@@ -7,6 +7,7 @@ import ChatbotQuestion from './ChatbotQuestion';
 import ChatbotOptions from './ChatbotOptions';
 import ChatbotTextInput from './ChatbotTextInput';
 import ChatbotForm from './ChatbotForm';
+import { createEvent } from '../../services/eventsService';
 
 const questions = questionsData.questions;
 
@@ -54,24 +55,38 @@ function Chatbot() {
         }, 1000);
     }, [currentIndex]);
 
-    const handleConfirm = useCallback(async () => {
-        setIsSubmitting(true);
-        setSubmissionError('');
-        try {
-            await submitChatbotAnswers({ userId, answers: answers.slice(1) });
-            setIsComplete(true);
-        } catch (err) {
-            const message =
-                err?.response?.data?.message ||
-                err?.response?.data ||
-                err?.message ||
-                'Submission failed.';
-            setSubmissionError(String(message));
-        } finally {
-            setIsSubmitting(false);
-        }
-    }, [answers, userId]);
+const handleConfirm = useCallback(async () => {
+    setIsSubmitting(true);
+    setSubmissionError('');
 
+    try {
+        const result = await submitChatbotAnswers({
+            userId,
+            answers: answers.slice(1),
+        });
+
+        // ⭐ EVENT LOGGING HERE
+        await createEvent({
+            userId,
+            type: 'chatbot',
+            data: {
+                answers: answers.slice(1),
+                response: result,
+            },
+        });
+
+        setIsComplete(true);
+    } catch (err) {
+        const message =
+            err?.response?.data?.message ||
+            err?.response?.data ||
+            err?.message ||
+            'Submission failed.';
+        setSubmissionError(String(message));
+    } finally {
+        setIsSubmitting(false);
+    }
+}, [answers, userId]);
     const handleCancel = useCallback(() => {
         setIsDismissed(true);
     }, []);
